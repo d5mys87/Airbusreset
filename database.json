@@ -1163,6 +1163,35 @@
           "fsn": "101-150"
         }
       ]
+    },
+    {
+      "id": "test-1771712203944",
+      "aircraft": [
+        "CEO",
+        "NEO"
+      ],
+      "ecamMessages": [
+        "test"
+      ],
+      "ata": "22",
+      "computer": "test",
+      "resetProcedure": "test",
+      "notes": "ww",
+      "warnings": [
+        "test"
+      ],
+      "cautions": [
+        "sw"
+      ],
+      "cbTable": [
+        {
+          "panel": "122",
+          "designation": "sws",
+          "fin": "221",
+          "location": "121",
+          "fsn": "ALL121"
+        }
+      ]
     }
   ]
 }
