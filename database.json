@@ -1,0 +1,505 @@
+{
+  "version": "1.0",
+  "lastUpdated": "2026-02-21",
+  "messages": [
+    {
+      "id": "air-pack-regul-fault-neo",
+      "aircraft": ["NEO"],
+      "ecamMessages": ["AIR PACK 1 REGUL FAULT", "AIR PACK 2 REGUL FAULT"],
+      "ata": "21",
+      "computer": "ACSC",
+      "resetProcedure": "1. On the OVERHEAD panel, push the PACK 1 (or 2) pb to OFF.\n2. Wait 5 seconds.\n3. Push the PACK 1 (or 2) pb back to ON.\n4. Monitor ECAM for FAULT clearance.\n5. If fault persists, apply AMM task 21-00-00-810-818-A.",
+      "notes": "Applicable to NEO aircraft (FSN 101-150) only. ACSC reset may clear transient faults caused by sensor spikes.",
+      "warnings": [],
+      "cautions": ["Do not reset more than once in flight. If fault recurs, do not attempt further resets."],
+      "cbTable": [
+        {"panel": "49VU", "designation": "AIR COND/ACSC1/SPLY", "fin": "1CA1", "location": "D01", "fsn": "101-150"},
+        {"panel": "49VU", "designation": "AIR COND/ACSC2/SPLY", "fin": "1CA2", "location": "D02", "fsn": "101-150"}
+      ]
+    },
+    {
+      "id": "vent-avncs-sys-fault",
+      "aircraft": ["CEO", "NEO"],
+      "ecamMessages": ["VENT AVNCS SYS FAULT"],
+      "ata": "21",
+      "computer": "AEVC",
+      "resetProcedure": "1. On the OVERHEAD panel, press the AVNCS VENT pb to OFF.\n2. Wait 5 seconds.\n3. Press the AVNCS VENT pb back to AUTO.\n4. Check ECAM for fault clearance.\n5. If fault persists, check AEVC circuit breakers.",
+      "notes": "AEVC controls avionics ventilation. Reset may clear transient sensor or communication faults.",
+      "warnings": [],
+      "cautions": ["Ensure avionics cooling is not compromised during reset. Monitor avionics bay temperature."],
+      "cbTable": [
+        {"panel": "49VU", "designation": "VENT/AEVC/SPLY", "fin": "10HV", "location": "H03", "fsn": "ALL"}
+      ]
+    },
+    {
+      "id": "cab-pr-sys-fault",
+      "aircraft": ["CEO", "NEO"],
+      "ecamMessages": ["CAB PR SYS 1 FAULT", "CAB PR SYS 2 FAULT"],
+      "ata": "21",
+      "computer": "CPC",
+      "resetProcedure": "1. On the OVERHEAD panel, select CPC 1 (or 2) to MAN.\n2. Wait 5 seconds.\n3. Return CPC 1 (or 2) to AUTO.\n4. Monitor ECAM for fault clearance.\n5. If both CPCs show fault, manually control cabin pressure using DITCHING pb and OUTFLOW VALVE control.",
+      "notes": "CPC 1 and CPC 2 operate in active/standby mode. If one fails, the other takes over automatically.",
+      "warnings": ["If both CPCs fail simultaneously, manual pressure control is required. Refer to QRH."],
+      "cautions": [],
+      "cbTable": [
+        {"panel": "49VU", "designation": "CAB PR/CPC1/SPLY", "fin": "1CP1", "location": "E04", "fsn": "ALL"},
+        {"panel": "49VU", "designation": "CAB PR/CPC2/SPLY", "fin": "1CP2", "location": "E05", "fsn": "ALL"}
+      ]
+    },
+    {
+      "id": "cond-trim-air-sys-fault",
+      "aircraft": ["CEO", "NEO"],
+      "ecamMessages": ["COND TRIM AIR SYS FAULT"],
+      "ata": "21",
+      "computer": "ACSC",
+      "resetProcedure": "1. On the OVERHEAD panel, select HOT AIR pb to OFF.\n2. Wait 10 seconds.\n3. Select HOT AIR pb back to ON.\n4. Check ECAM for fault clearance.\n5. If fault persists, open and reclose ACSC circuit breakers.",
+      "notes": "TRIM AIR system supplies individual trim air to cabin zones. Fault may be due to zone controller or duct temperature sensor.",
+      "warnings": [],
+      "cautions": ["Monitor all zone temperatures after reset."],
+      "cbTable": [
+        {"panel": "49VU", "designation": "AIR COND/ACSC1/SPLY", "fin": "1CA1", "location": "D01", "fsn": "ALL"},
+        {"panel": "49VU", "designation": "AIR COND/ACSC2/SPLY", "fin": "1CA2", "location": "D02", "fsn": "ALL"}
+      ]
+    },
+    {
+      "id": "air-pack-regul-fault-bleed-abnorm",
+      "aircraft": ["CEO", "NEO"],
+      "ecamMessages": ["AIR PACK REGUL FAULT", "ENG BLEED ABNORM PR"],
+      "ata": "21+36",
+      "computer": "ACSC + Engine Bleed",
+      "resetProcedure": "1. Select ENG 1 (or 2) BLEED pb to OFF.\n2. Wait 10 seconds.\n3. Select ENG 1 (or 2) BLEED pb back to ON.\n4. Monitor ECAM — if PACK REGUL FAULT clears, bleed was the root cause.\n5. If fault persists on ACSC side, pull and reset ACSC circuit breaker (ground only).\n6. If both faults persist, do not reset further. Apply dual-fault procedure from QRH.",
+      "notes": "Combined bleed + pack fault usually indicates upstream bleed pressure issue affecting pack regulator. Address bleed fault first.",
+      "warnings": ["Do not reset bleed system more than once per fault occurrence."],
+      "cautions": ["Monitor pack outlet temperature after reset."],
+      "cbTable": [
+        {"panel": "49VU", "designation": "AIR COND/ACSC1/SPLY", "fin": "1CA1", "location": "D01", "fsn": "ALL"},
+        {"panel": "80VU", "designation": "BLEED/ENG1/BMC", "fin": "4BM1", "location": "A10", "fsn": "ALL"}
+      ]
+    },
+    {
+      "id": "auto-flt-fcu-fault",
+      "aircraft": ["CEO", "NEO"],
+      "ecamMessages": ["AUTO FLT FCU 1 FAULT", "AUTO FLT FCU 2 FAULT"],
+      "ata": "22",
+      "computer": "FCU",
+      "resetProcedure": "1. On the FCU, note current autopilot selections.\n2. Press AP1 or AP2 to disengage (as appropriate).\n3. Open FCU circuit breaker 2CA on panel 49VU.\n4. Wait 30 seconds.\n5. Close FCU circuit breaker 2CA.\n6. Wait for FCU to complete its power-on self-test (approx. 15 seconds).\n7. Re-engage autopilot if conditions permit.",
+      "notes": "FCU 1 and FCU 2 refer to the two computation channels within the single FCU unit. A fault on one channel may leave the other operational.",
+      "warnings": [],
+      "cautions": ["Do not perform FCU reset while autopilot is engaged. Disengage AP first."],
+      "cbTable": [
+        {"panel": "49VU", "designation": "AUTO FLT/FCU/SPLY", "fin": "2CA", "location": "B07", "fsn": "ALL"}
+      ]
+    },
+    {
+      "id": "auto-flt-fcu-1-2-fault",
+      "aircraft": ["CEO", "NEO"],
+      "ecamMessages": ["AUTO FLT FCU 1+2 FAULT"],
+      "ata": "22",
+      "computer": "FCU",
+      "resetProcedure": "1. Ensure aircraft is in manual (direct law or alternate law) and hand-flown.\n2. Open FCU circuit breaker 2CA on panel 49VU.\n3. Wait 30 seconds.\n4. Close FCU circuit breaker 2CA.\n5. Wait for FCU self-test to complete.\n6. Check if FCU display is restored.\n7. If fault clears, re-engage autopilot cautiously. If fault persists, continue in managed/selected mode using FMS CDU.",
+      "notes": "Loss of both FCU channels means loss of autopilot. Aircraft reverts to DIRECT LAW for guidance. FMS continues to operate via CDUs.",
+      "warnings": ["With both FCU channels failed, autopilot and autothrust are unavailable."],
+      "cautions": ["Maintain manual flight until FCU is confirmed operational."],
+      "cbTable": [
+        {"panel": "49VU", "designation": "AUTO FLT/FCU/SPLY", "fin": "2CA", "location": "B07", "fsn": "ALL"}
+      ]
+    },
+    {
+      "id": "afs-mcdu-locked-blank",
+      "aircraft": ["CEO", "NEO"],
+      "ecamMessages": ["AFS-MCDU-One MCDU locked or blank"],
+      "ata": "22",
+      "computer": "MCDU",
+      "resetProcedure": "1. On the affected MCDU, press the CLR key 3 times.\n2. If MCDU remains locked/blank, press the DIR key and then CLR.\n3. If still unresponsive, open the MCDU circuit breaker (see CB table).\n4. Wait 15 seconds.\n5. Close the MCDU circuit breaker.\n6. Wait for MCDU to complete its self-test and display the MCDU MENU page.\n7. Enter FMGC data as required.",
+      "notes": "A single MCDU fault does not prevent continued flight. The other MCDU remains active and all navigation functions continue.",
+      "warnings": [],
+      "cautions": ["Do not reset both MCDUs simultaneously. Reset one at a time."],
+      "cbTable": [
+        {"panel": "45VU", "designation": "FLT MGMT/MCDU1/SPLY", "fin": "3CA1", "location": "D12", "fsn": "ALL"},
+        {"panel": "45VU", "designation": "FLT MGMT/MCDU2/SPLY", "fin": "3CA2", "location": "D13", "fsn": "ALL"},
+        {"panel": "45VU", "designation": "FLT MGMT/MCDU3/SPLY", "fin": "3CA3", "location": "D14", "fsn": "ALL"}
+      ]
+    },
+    {
+      "id": "afs-fmgc-malfunction",
+      "aircraft": ["CEO", "NEO"],
+      "ecamMessages": ["AFS-FMGC malfunction", "All MCDUs locked"],
+      "ata": "22",
+      "computer": "FMGC",
+      "resetProcedure": "1. Set both APs to OFF, A/THR to OFF.\n2. Open FMGC 1 circuit breaker on panel 45VU.\n3. Wait 30 seconds.\n4. Close FMGC 1 circuit breaker.\n5. If MCDUs recover, verify FMGC 1 is active and re-enter flight plan data as required.\n6. If all MCDUs remain locked, open and reset FMGC 2 circuit breaker in the same manner.\n7. Do not reset both FMGCs simultaneously.",
+      "notes": "If all MCDUs remain locked after resetting both FMGCs, continue flight using raw data (ILS, VOR, DME). Refer to emergency nav procedures in QRH.",
+      "warnings": ["Loss of both FMGCs means loss of managed nav guidance. Revert to raw data navigation."],
+      "cautions": ["Reset FMGCs one at a time only."],
+      "cbTable": [
+        {"panel": "45VU", "designation": "FLT MGMT/FMGC1/SPLY", "fin": "4CA1", "location": "E10", "fsn": "ALL"},
+        {"panel": "45VU", "designation": "FLT MGMT/FMGC2/SPLY", "fin": "4CA2", "location": "E11", "fsn": "ALL"}
+      ]
+    },
+    {
+      "id": "auto-flt-athr-off",
+      "aircraft": ["CEO", "NEO"],
+      "ecamMessages": ["AUTO FLT A/THR OFF"],
+      "ata": "22",
+      "computer": "FCU",
+      "resetProcedure": "1. Check A/THR pb on FCU — ensure it is armed (light ON).\n2. If A/THR disconnected due to fault, press A/THR pb to re-engage.\n3. If A/THR will not re-engage, check FCU circuit breaker 2CA.\n4. Open 2CA, wait 30 seconds, close 2CA.\n5. After FCU self-test, attempt A/THR re-engagement.",
+      "notes": "A/THR OFF ECAM is triggered by intentional crew disconnect, turbulence protection, or FCU fault. Distinguish between intentional and fault-triggered disconnect.",
+      "warnings": [],
+      "cautions": ["Verify A/THR mode before re-engagement. Ensure thrust levers are at appropriate detent."],
+      "cbTable": [
+        {"panel": "49VU", "designation": "AUTO FLT/FCU/SPLY", "fin": "2CA", "location": "B07", "fsn": "ALL"}
+      ]
+    },
+    {
+      "id": "afs-fac-cat3-dual",
+      "aircraft": ["CEO", "NEO"],
+      "ecamMessages": ["AFS-FAC-CAT 3 DUAL message"],
+      "ata": "22",
+      "computer": "FAC",
+      "resetProcedure": "1. On the OVERHEAD panel, press FAC 1 pb to OFF.\n2. Wait 5 seconds.\n3. Press FAC 1 pb back to ON.\n4. If fault clears, monitor for recurrence.\n5. If fault persists, repeat for FAC 2.\n6. Do not reset both FACs simultaneously.",
+      "notes": "CAT 3 DUAL capability requires both FACs operational. A fault in one FAC will downgrade approach minima. Check approach requirements.",
+      "warnings": [],
+      "cautions": ["Review CAT 3 approach requirements and alternate minima if FAC fault cannot be cleared."],
+      "cbTable": [
+        {"panel": "49VU", "designation": "AUTO FLT/FAC1/SPLY", "fin": "5FA1", "location": "F08", "fsn": "ALL"},
+        {"panel": "49VU", "designation": "AUTO FLT/FAC2/SPLY", "fin": "5FA2", "location": "F09", "fsn": "ALL"}
+      ]
+    },
+    {
+      "id": "auto-flt-yaw-damper-1",
+      "aircraft": ["CEO", "NEO"],
+      "ecamMessages": ["AUTO FLT YAW DAMPER 1"],
+      "ata": "22",
+      "computer": "FAC 1",
+      "resetProcedure": "1. On OVERHEAD, press FAC 1 pb to OFF.\n2. Wait 5 seconds.\n3. Press FAC 1 pb to ON.\n4. Verify YAW DAMPER 1 ECAM clears.\n5. If fault persists, leave FAC 1 OFF and operate on FAC 2.",
+      "notes": "YAW DAMPER 1 is provided by FAC 1. Loss of YD1 alone is not critical — YD2 (FAC 2) provides yaw damping. Dutch roll tendency may be slightly increased.",
+      "warnings": [],
+      "cautions": [],
+      "cbTable": [
+        {"panel": "49VU", "designation": "AUTO FLT/FAC1/SPLY", "fin": "5FA1", "location": "F08", "fsn": "ALL"}
+      ]
+    },
+    {
+      "id": "auto-flt-yaw-damper-2",
+      "aircraft": ["CEO", "NEO"],
+      "ecamMessages": ["AUTO FLT YAW DAMPER 2"],
+      "ata": "22",
+      "computer": "FAC 2",
+      "resetProcedure": "1. On OVERHEAD, press FAC 2 pb to OFF.\n2. Wait 5 seconds.\n3. Press FAC 2 pb to ON.\n4. Verify YAW DAMPER 2 ECAM clears.\n5. If fault persists, leave FAC 2 OFF and operate on FAC 1.",
+      "notes": "YAW DAMPER 2 is provided by FAC 2. Loss of YD2 alone is not critical — YD1 (FAC 1) provides yaw damping.",
+      "warnings": [],
+      "cautions": [],
+      "cbTable": [
+        {"panel": "49VU", "designation": "AUTO FLT/FAC2/SPLY", "fin": "5FA2", "location": "F09", "fsn": "ALL"}
+      ]
+    },
+    {
+      "id": "com-cids-1-2-fault",
+      "aircraft": ["CEO", "NEO"],
+      "ecamMessages": ["COM CIDS 1+2 FAULT"],
+      "ata": "23",
+      "computer": "CIDS",
+      "resetProcedure": "1. On the OVERHEAD panel, press CIDS EMER EXIT LT pb OFF, then back to ARM.\n2. Pull and reset CIDS 1 circuit breaker on panel 121VU.\n3. Wait 30 seconds.\n4. Close CIDS 1 circuit breaker and wait for self-test.\n5. If fault persists on both channels, repeat for CIDS 2.\n6. Do not reset both simultaneously.",
+      "notes": "Applicable FSN 051-132 only. CIDS controls passenger address, cabin interphone, and seatbelt/no-smoking signs. A dual failure disables cabin crew communication systems.",
+      "warnings": ["With both CIDS channels failed, PA and crew interphone are lost. Use flight deck interphone only."],
+      "cautions": [],
+      "cbTable": [
+        {"panel": "121VU", "designation": "CAB INT/CIDS1/SPLY", "fin": "6CID1", "location": "A01", "fsn": "051-132"},
+        {"panel": "121VU", "designation": "CAB INT/CIDS2/SPLY", "fin": "6CID2", "location": "A02", "fsn": "051-132"}
+      ]
+    },
+    {
+      "id": "com-cids-evac-horn-spurious",
+      "aircraft": ["CEO", "NEO"],
+      "ecamMessages": ["COM-CIDS-Evac horn starts spuriously"],
+      "ata": "23",
+      "computer": "CIDS",
+      "resetProcedure": "1. Immediately press EVAC COMMAND pb to STOP (on CAPT or FIRST OFFICER panel).\n2. Notify cabin crew via interphone that horn was spurious — no evacuation required.\n3. Pull EVAC circuit breaker on panel 121VU to prevent recurrence.\n4. On ground: reset CIDS via circuit breaker before next flight.\n5. Raise defect for CIDS inspection.",
+      "notes": "Spurious evacuation horn is a serious nuisance that can cause cabin crew reaction. Immediate action to silence and communicate with cabin crew is critical.",
+      "warnings": ["Ensure cabin crew are immediately informed of spurious activation to prevent passenger confusion or emergency slide deployment."],
+      "cautions": [],
+      "cbTable": [
+        {"panel": "121VU", "designation": "CAB INT/CIDS1/SPLY", "fin": "6CID1", "location": "A01", "fsn": "ALL"},
+        {"panel": "49VU", "designation": "EVAC/COMMAND/SPLY", "fin": "8EV", "location": "G04", "fsn": "ALL"}
+      ]
+    },
+    {
+      "id": "com-rmp-no-function",
+      "aircraft": ["CEO", "NEO"],
+      "ecamMessages": ["COM-RMP-no function (frozen)"],
+      "ata": "23",
+      "computer": "RMP",
+      "resetProcedure": "1. On the affected RMP, press the BRT knob (or any key) to attempt a wake from freeze.\n2. If still frozen, pull RMP 1 (or 2 or 3) circuit breaker on panel 49VU.\n3. Wait 15 seconds.\n4. Close the circuit breaker.\n5. Allow RMP self-test to complete (~10 seconds).\n6. Verify VHF/HF/NAV frequencies are correct after reset.",
+      "notes": "RMP freeze is typically a software fault. Reset restores full function. If RMP 1 and 2 are both unresponsive, use RMP 3 for backup communications.",
+      "warnings": [],
+      "cautions": ["After RMP reset, verify active COM frequency is correct before transmitting."],
+      "cbTable": [
+        {"panel": "49VU", "designation": "COM/RMP1/SPLY", "fin": "7RM1", "location": "C05", "fsn": "ALL"},
+        {"panel": "49VU", "designation": "COM/RMP2/SPLY", "fin": "7RM2", "location": "C06", "fsn": "ALL"},
+        {"panel": "49VU", "designation": "COM/RMP3/SPLY", "fin": "7RM3", "location": "C07", "fsn": "ALL"}
+      ]
+    },
+    {
+      "id": "com-cids-fap-no-function",
+      "aircraft": ["CEO", "NEO"],
+      "ecamMessages": ["COM-CIDS-FAP no function"],
+      "ata": "23",
+      "computer": "FAP/PRAM",
+      "resetProcedure": "1. Press RESET on the FAP (forward attendant panel) if available.\n2. If FAP remains unresponsive, pull the CIDS 1 circuit breaker on panel 121VU.\n3. Wait 15 seconds.\n4. Close the CIDS 1 circuit breaker.\n5. Wait for CIDS self-test to complete.\n6. Check if FAP display recovers.\n7. If fault persists, FAP function remains degraded — notify maintenance.",
+      "notes": "FAP provides cabin crew access to passenger address, seatbelt signs, lighting, and door status. Loss of FAP function can be managed via flight deck controls for critical functions.",
+      "warnings": [],
+      "cautions": [],
+      "cbTable": [
+        {"panel": "121VU", "designation": "CAB INT/CIDS1/SPLY", "fin": "6CID1", "location": "A01", "fsn": "ALL"}
+      ]
+    },
+    {
+      "id": "com-cids-incorrect-exits-fap",
+      "aircraft": ["CEO", "NEO"],
+      "ecamMessages": ["COM-CIDS-Incorrect number of exits on FAP"],
+      "ata": "23",
+      "computer": "CIDS",
+      "resetProcedure": "1. Pull CIDS 1 circuit breaker on panel 121VU.\n2. Wait 30 seconds.\n3. Close CIDS 1 circuit breaker.\n4. Allow CIDS to complete self-test and FAP to reinitialise.\n5. Verify correct exit count on FAP display.\n6. If incorrect count persists, pull and reset CIDS 2 circuit breaker.\n7. If fault persists after both resets, defer to maintenance — exit configuration data may be corrupted.",
+      "notes": "Incorrect exit count on FAP may indicate CIDS configuration data error. This is typically a software/memory issue.",
+      "warnings": [],
+      "cautions": ["Verify door configuration is correct before cabin crew briefing."],
+      "cbTable": [
+        {"panel": "121VU", "designation": "CAB INT/CIDS1/SPLY", "fin": "6CID1", "location": "A01", "fsn": "ALL"},
+        {"panel": "121VU", "designation": "CAB INT/CIDS2/SPLY", "fin": "6CID2", "location": "A02", "fsn": "ALL"}
+      ]
+    },
+    {
+      "id": "fuel-loss-qty-indication",
+      "aircraft": ["CEO", "NEO"],
+      "ecamMessages": ["FUEL-Loss of quantity indication"],
+      "ata": "28",
+      "computer": "FQIC",
+      "resetProcedure": "1. On OVERHEAD panel, check FQIC circuit breaker on panel 49VU.\n2. Pull FQIC circuit breaker.\n3. Wait 30 seconds.\n4. Close FQIC circuit breaker.\n5. Wait for FQIC to complete self-test (~60 seconds).\n6. Verify fuel quantity displays recover on ECAM FUEL page.\n7. If one tank shows loss of indication, use remaining FQ sensors to estimate total fuel. Cross-check with fuel flow integration.",
+      "notes": "FQIC provides all fuel quantity and temperature data. Partial loss (one tank) is manageable; total loss requires fuel management by fuel flow integration only.",
+      "warnings": ["If total fuel quantity is unknown, do not depart. Use fuel flow integration method per FCOM for in-flight fuel management."],
+      "cautions": [],
+      "cbTable": [
+        {"panel": "49VU", "designation": "FUEL/FQIC/SPLY", "fin": "9FQ", "location": "H07", "fsn": "ALL"}
+      ]
+    },
+    {
+      "id": "anti-ice-windshield-fault",
+      "aircraft": ["CEO", "NEO"],
+      "ecamMessages": ["ANTI ICE L WINDSHIELD", "ANTI ICE R WINDSHIELD", "ANTI ICE L WINDOW", "ANTI ICE R WINDOW"],
+      "ata": "30",
+      "computer": "WHC",
+      "resetProcedure": "1. On the OVERHEAD panel, switch the affected WSHLD/WINDOW pb to OFF.\n2. Wait 10 seconds.\n3. Switch the pb back to ON.\n4. Monitor ECAM for fault clearance.\n5. If fault persists, check WHC circuit breaker on panel 49VU.\n6. Pull WHC circuit breaker, wait 30 seconds, close circuit breaker.",
+      "notes": "WHC controls windshield and window heating. Overheat protection may trigger a fault on hot days during extended ground operations. Allow time for glass to cool before resetting.",
+      "warnings": ["If windshield heating is lost in icing conditions, increase airspeed to reduce icing risk and consider diversion."],
+      "cautions": ["Do not operate with cracked or delaminated windshield. Inspect before reset."],
+      "cbTable": [
+        {"panel": "49VU", "designation": "ANTI ICE/WHC1/SPLY", "fin": "11WH1", "location": "J02", "fsn": "ALL"},
+        {"panel": "49VU", "designation": "ANTI ICE/WHC2/SPLY", "fin": "11WH2", "location": "J03", "fsn": "ALL"}
+      ]
+    },
+    {
+      "id": "fws-fwc-fault",
+      "aircraft": ["CEO", "NEO"],
+      "ecamMessages": ["FWS FWC 1 FAULT", "FWS FWC 2 FAULT"],
+      "ata": "31",
+      "computer": "FWC",
+      "resetProcedure": "1. On OVERHEAD panel, press FWC 1 (or 2) pb to OFF.\n2. Wait 5 seconds.\n3. Press FWC 1 (or 2) pb back to ON.\n4. Wait for FWC self-test to complete (~15 seconds).\n5. Verify ECAM displays recover and fault message clears.\n6. If fault persists after reset, open circuit breaker 3WW (FWC 1) or 3WW2 (FWC 2) on panel 49VU.\n7. Wait 30 seconds, close circuit breaker.",
+      "notes": "FWC provides all ECAM warning and caution messages. With one FWC failed, the other provides full coverage. Do not reset both FWCs simultaneously.",
+      "warnings": [],
+      "cautions": ["Do not reset both FWCs simultaneously — this will cause momentary loss of all ECAM warnings."],
+      "cbTable": [
+        {"panel": "49VU", "designation": "FWS/FWC1/SPLY", "fin": "3WW1", "location": "F01", "fsn": "ALL"},
+        {"panel": "49VU", "designation": "FWS/FWC2/SPLY", "fin": "3WW2", "location": "F02", "fsn": "ALL"}
+      ]
+    },
+    {
+      "id": "lg-lgciu-fault",
+      "aircraft": ["CEO", "NEO"],
+      "ecamMessages": ["L/G LGCIU 1 FAULT", "L/G LGCIU 2 FAULT"],
+      "ata": "32",
+      "computer": "LGCIU",
+      "resetProcedure": "1. Identify which LGCIU has failed (ECAM will indicate 1 or 2).\n2. Open the affected LGCIU circuit breaker on panel 49VU.\n3. Wait 30 seconds.\n4. Close the LGCIU circuit breaker.\n5. Verify ECAM L/G page shows correct gear status.\n6. Perform a landing gear retraction/extension cycle if airborne and fault clears — note any asymmetry.",
+      "notes": "LGCIU 1 and 2 monitor landing gear position, WOW, and BSCU interface. With one LGCIU failed, the other takes over. Gear operation remains normal.",
+      "warnings": [],
+      "cautions": ["Do not reset both LGCIUs simultaneously. Ensure WOW signal integrity before reset on ground."],
+      "cbTable": [
+        {"panel": "49VU", "designation": "L/G/LGCIU1/SPLY", "fin": "12LC1", "location": "K04", "fsn": "ALL"},
+        {"panel": "49VU", "designation": "L/G/LGCIU2/SPLY", "fin": "12LC2", "location": "K05", "fsn": "ALL"}
+      ]
+    },
+    {
+      "id": "wheel-nw-strg-fault",
+      "aircraft": ["CEO", "NEO"],
+      "ecamMessages": ["WHEEL N/W STRG FAULT"],
+      "ata": "32",
+      "computer": "BSCU",
+      "resetProcedure": "1. On OVERHEAD panel, press N/W STRG pb to OFF.\n2. Wait 5 seconds.\n3. Press N/W STRG pb back to ON (or set BSCU via NORM/ALTN selector as applicable).\n4. Verify NOSE WHEEL STEERING indication on ECAM WHEEL page.\n5. If fault persists, open BSCU circuit breaker on panel 49VU, wait 30 seconds, close.\n6. Test steering with small nose wheel inputs on ground.",
+      "notes": "NW STRG fault may be triggered by a BSCU channel fault, towing switch in wrong position, or loss of hydraulic system 2 (which powers steering).",
+      "warnings": ["Verify towing disconnect pin is removed before attempting steering reset."],
+      "cautions": [],
+      "cbTable": [
+        {"panel": "49VU", "designation": "L/G/BSCU1/SPLY", "fin": "13BS1", "location": "K08", "fsn": "ALL"},
+        {"panel": "49VU", "designation": "L/G/BSCU2/SPLY", "fin": "13BS2", "location": "K09", "fsn": "ALL"}
+      ]
+    },
+    {
+      "id": "brakes-sys-fault-bscu",
+      "aircraft": ["CEO", "NEO"],
+      "ecamMessages": ["BRAKES SYS 1 FAULT", "BRAKES SYS 2 FAULT", "BSCU CH1 FAULT", "BSCU CH2 FAULT"],
+      "ata": "32",
+      "computer": "BSCU",
+      "resetProcedure": "1. Verify anti-skid is operational on remaining system.\n2. Open affected BSCU channel circuit breaker on panel 49VU.\n3. Wait 30 seconds.\n4. Close BSCU circuit breaker.\n5. Verify ECAM WHEEL page shows brakes pressure and BSCU channel status.\n6. Test brake pedals on ground with aircraft stationary.\n7. If both BSCU channels fault, revert to PARKING brake as emergency brake.",
+      "notes": "BRAKES SYS 1 uses hydraulic system 3 (green). BRAKES SYS 2 uses hydraulic system 1 (yellow). A single system fault leaves the alternate system fully operational.",
+      "warnings": ["If both BSCU channels fail simultaneously, use PARKING/EMER brake for braking. Anti-skid will not be available."],
+      "cautions": [],
+      "cbTable": [
+        {"panel": "49VU", "designation": "L/G/BSCU1/SPLY", "fin": "13BS1", "location": "K08", "fsn": "ALL"},
+        {"panel": "49VU", "designation": "L/G/BSCU2/SPLY", "fin": "13BS2", "location": "K09", "fsn": "ALL"}
+      ]
+    },
+    {
+      "id": "nav-isis-malfunction",
+      "aircraft": ["CEO", "NEO"],
+      "ecamMessages": ["NAV-STBY-ISIS malfunction"],
+      "ata": "34",
+      "computer": "ISIS",
+      "resetProcedure": "1. On the ISIS display unit, press and hold the RESET button for 3 seconds.\n2. ISIS will perform a self-test (approx. 30 seconds).\n3. Verify attitude, airspeed, and altitude are displayed correctly.\n4. If malfunction persists, open ISIS circuit breaker on panel 45VU.\n5. Wait 30 seconds.\n6. Close ISIS circuit breaker and allow full warm-up (~60 seconds).",
+      "notes": "ISIS provides standby attitude, airspeed, altitude, and heading independent of main ADIRS. It has an internal battery backup. A malfunction does not affect main displays.",
+      "warnings": [],
+      "cautions": ["After ISIS reset, verify alignment is complete before relying on ISIS for standby navigation."],
+      "cbTable": [
+        {"panel": "45VU", "designation": "NAV/ISIS/SPLY", "fin": "14IS", "location": "M01", "fsn": "ALL"}
+      ]
+    },
+    {
+      "id": "nav-tcas-fault",
+      "aircraft": ["CEO", "NEO"],
+      "ecamMessages": ["NAV TCAS FAULT"],
+      "ata": "34",
+      "computer": "TCAS/T2CAS/TISS",
+      "resetProcedure": "1. On the TRANSPONDER control panel, select TCAS from THRT to TA ONLY briefly, then back to THRT.\n2. If fault persists, open TCAS circuit breaker on panel 45VU.\n3. Wait 30 seconds.\n4. Close TCAS circuit breaker.\n5. Allow TCAS self-test to complete (~45 seconds).\n6. Verify TCAS advisory display on ND recovers.",
+      "notes": "TCAS fault disables collision avoidance advisory function. Traffic display may or may not be affected depending on failure mode. Inform ATC of TCAS degradation.",
+      "warnings": [],
+      "cautions": ["Notify ATC of TCAS failure. Enhanced visual scan and ATC separation assurance required."],
+      "cbTable": [
+        {"panel": "45VU", "designation": "NAV/TCAS/SPLY", "fin": "15TC", "location": "N03", "fsn": "ALL"}
+      ]
+    },
+    {
+      "id": "nav-gpws-fault-terr-det",
+      "aircraft": ["CEO", "NEO"],
+      "ecamMessages": ["NAV GPWS FAULT", "TERR DET FAULT"],
+      "ata": "34",
+      "computer": "GPWC",
+      "resetProcedure": "1. On OVERHEAD, press GPWS pb to OFF.\n2. Wait 5 seconds.\n3. Press GPWS pb back to ON.\n4. Verify GPWS self-test completes (press TEST on GPWS panel if available).\n5. If fault persists, open GPWC circuit breaker on panel 45VU.\n6. Wait 30 seconds.\n7. Close GPWC circuit breaker.",
+      "notes": "Applicable FSN 101-124. GPWC provides GPWS and TAWS (terrain awareness). Loss of terrain function requires enhanced crew terrain awareness. Minimum safe altitude must be maintained.",
+      "warnings": ["With GPWC failed, TERRAIN PULL UP and terrain avoidance warnings are unavailable. Increase terrain clearance margins."],
+      "cautions": [],
+      "cbTable": [
+        {"panel": "45VU", "designation": "NAV/GPWC/SPLY", "fin": "16GW", "location": "N06", "fsn": "101-124"}
+      ]
+    },
+    {
+      "id": "nav-atc-xpdr-fault",
+      "aircraft": ["CEO", "NEO"],
+      "ecamMessages": ["NAV ATC/XPDR 1+2 FAULT"],
+      "ata": "34",
+      "computer": "XPDR",
+      "resetProcedure": "1. On TRANSPONDER control panel, cycle from STBY to ALT and back.\n2. If XPDR 1 is selected, switch to XPDR 2 via the selector.\n3. If both fail, open XPDR 1 circuit breaker on panel 45VU, wait 30 seconds, close.\n4. If XPDR 1 recovers, leave XPDR 2 to recover on its own (they may have been affected by same transient).\n5. Notify ATC immediately of transponder degradation.",
+      "notes": "FSN 052-100, 103-150. Dual XPDR failure means ATC radar surveillance is lost. Secondary surveillance radar (SSR) contact with ATC is lost. Primary radar remains available.",
+      "warnings": ["Notify ATC immediately. Follow ATC instructions for radar identification without transponder."],
+      "cautions": [],
+      "cbTable": [
+        {"panel": "45VU", "designation": "NAV/XPDR1/SPLY", "fin": "17XP1", "location": "P01", "fsn": "052-100,103-150"},
+        {"panel": "45VU", "designation": "NAV/XPDR2/SPLY", "fin": "17XP2", "location": "P02", "fsn": "052-100,103-150"}
+      ]
+    },
+    {
+      "id": "nav-gls-ls-fault",
+      "aircraft": ["CEO", "NEO"],
+      "ecamMessages": ["NAV GLS 1 FAULT", "NAV GLS 2 FAULT", "NAV LS 1 FAULT", "NAV LS 2 FAULT"],
+      "ata": "34",
+      "computer": "MMR",
+      "resetProcedure": "1. On the EFIS control panel, deselect LS/APPR mode (if selected).\n2. Open the affected MMR circuit breaker on panel 45VU.\n3. Wait 30 seconds.\n4. Close the MMR circuit breaker.\n5. Allow MMR self-test to complete.\n6. Re-select LS/APPR mode on EFIS panel and verify ILS/GLS frequency and course.",
+      "notes": "FSN 101-131. MMR provides ILS, GLS (GBAS), and MLS capability. A single MMR fault may downgrade approach capability. Verify approach requirements.",
+      "warnings": [],
+      "cautions": ["After reset, verify ILS course and glideslope are displayed correctly before commencing approach."],
+      "cbTable": [
+        {"panel": "45VU", "designation": "NAV/MMR1/SPLY", "fin": "18MM1", "location": "Q01", "fsn": "101-131"},
+        {"panel": "45VU", "designation": "NAV/MMR2/SPLY", "fin": "18MM2", "location": "Q02", "fsn": "101-131"}
+      ]
+    },
+    {
+      "id": "air-eng-bleed-fault-neo",
+      "aircraft": ["NEO"],
+      "ecamMessages": ["AIR ENG 1 BLEED FAULT", "AIR ENG 2 BLEED FAULT", "AIR ENG 1 BLEED ABNORM PR", "AIR ENG 2 BLEED ABNORM PR"],
+      "ata": "36",
+      "computer": "Engine Bleed",
+      "resetProcedure": "1. On OVERHEAD panel, select affected ENG BLEED pb to OFF.\n2. Wait 10 seconds.\n3. Select ENG BLEED pb back to ON.\n4. Monitor ECAM for fault clearance and pack operation.\n5. If fault recurs, leave bleed OFF and operate aircraft on single bleed/pack.",
+      "notes": "FSN 101-132 NEO aircraft. NEO bleed system uses engine-mounted bleed valves (no pre-cooler). Fault may be valve position feedback or pressure regulation issue.",
+      "warnings": [],
+      "cautions": ["Do not reset bleed more than twice. Repeated resets may mask a developing engine or bleed system fault."],
+      "cbTable": [
+        {"panel": "80VU", "designation": "BLEED/ENG1/BMC1", "fin": "4BM1", "location": "A10", "fsn": "101-132"},
+        {"panel": "80VU", "designation": "BLEED/ENG2/BMC2", "fin": "4BM2", "location": "A11", "fsn": "101-132"}
+      ]
+    },
+    {
+      "id": "air-eng-bleed-not-clsd",
+      "aircraft": ["CEO", "NEO"],
+      "ecamMessages": ["AIR ENG 1 BLEED NOT CLSD", "AIR ENG 2 BLEED NOT CLSD"],
+      "ata": "36",
+      "computer": "Engine Bleed",
+      "resetProcedure": "1. On OVERHEAD panel, press affected ENG BLEED pb to OFF.\n2. Verify ECAM shows bleed valve closed (cross-valve and isolation valve status).\n3. Wait 5 seconds.\n4. If valve remains not closed, verify hydraulic power available to valve actuator.\n5. Attempt to close via alternate: if available, use X-BLEED selector to isolate.\n6. If valve cannot be closed, apply QRH procedure for stuck-open bleed valve.",
+      "notes": "A bleed valve NOT CLSD indication means the valve commanded closed but position feedback indicates open. May be stuck valve or faulty position sensor.",
+      "warnings": ["If bleed valve cannot be confirmed closed, do not operate affected pack — risk of hot air duct overpressure."],
+      "cautions": [],
+      "cbTable": [
+        {"panel": "80VU", "designation": "BLEED/ENG1/VALVE", "fin": "4VL1", "location": "A12", "fsn": "ALL"},
+        {"panel": "80VU", "designation": "BLEED/ENG2/VALVE", "fin": "4VL2", "location": "A13", "fsn": "ALL"}
+      ]
+    },
+    {
+      "id": "info-sys-atims-atsu-fault",
+      "aircraft": ["CEO"],
+      "ecamMessages": ["INFO SYS-ATIMS-ATSU malfunction"],
+      "ata": "46",
+      "computer": "ATSU",
+      "resetProcedure": "1. On the MCDU, select ATSU or DATALINK menu.\n2. If ATSU is shown as FAILED, press RESET on ATSU page if available.\n3. Open ATSU circuit breaker on panel 45VU.\n4. Wait 30 seconds.\n5. Close ATSU circuit breaker.\n6. Allow ATSU self-test to complete (~45 seconds).\n7. Log into ACARS/DATALINK session if required.",
+      "notes": "CEO (FSN 051-100) only. ATSU provides ACARS datalink, ATC datalink (CPDLC), and ATIS reception. Loss of ATSU means voice communication must be used for all ATC and company messages.",
+      "warnings": [],
+      "cautions": ["Notify ATC if CPDLC is lost. Revert to voice for all ATC communications."],
+      "cbTable": [
+        {"panel": "45VU", "designation": "INFO SYS/ATSU/SPLY", "fin": "19AT", "location": "R04", "fsn": "051-100"}
+      ]
+    },
+    {
+      "id": "eng-fadec-fault-neo",
+      "aircraft": ["NEO"],
+      "ecamMessages": ["ENG 1 FADEC A FAULT", "ENG 1 FADEC B FAULT", "ENG 2 FADEC A FAULT", "ENG 2 FADEC B FAULT"],
+      "ata": "77",
+      "computer": "FADEC",
+      "resetProcedure": "1. On OVERHEAD, press affected ENG FADEC GND/PWR pb to OFF.\n2. Wait 5 seconds.\n3. Press FADEC GND/PWR pb back to ON (or allow engine-driven alternator to power FADEC).\n4. FADEC will perform its self-test.\n5. Monitor ENG ECAM page for recovery of FADEC channel.\n6. If fault persists in both A and B channels, do not reset further — shut down engine per FCOM/QRH.",
+      "notes": "FSN 101-150 NEO aircraft (CFM LEAP / P&W GTF engines). FADEC has two channels (A and B). A single channel fault leaves the alternate channel in control. The engine continues to operate normally.",
+      "warnings": ["If both FADEC channels (A+B) fault on same engine, engine control is degraded. Shut down engine per QRH."],
+      "cautions": ["Do not reset FADEC during engine start sequence."],
+      "cbTable": [
+        {"panel": "49VU", "designation": "ENG/FADEC1/GND PWR", "fin": "20FD1", "location": "S02", "fsn": "101-150"},
+        {"panel": "49VU", "designation": "ENG/FADEC2/GND PWR", "fin": "20FD2", "location": "S03", "fsn": "101-150"}
+      ]
+    },
+    {
+      "id": "eng-2-eiu-fault",
+      "aircraft": ["CEO", "NEO"],
+      "ecamMessages": ["ENG 2 EIU"],
+      "ata": "77",
+      "computer": "EIU 2",
+      "resetProcedure": "1. On panel 49VU, open EIU 2 circuit breaker.\n2. Wait 30 seconds.\n3. Close EIU 2 circuit breaker.\n4. Allow EIU 2 self-test to complete.\n5. Verify ENG 2 parameters are displayed correctly on ECAM ENG page.\n6. If fault persists, ENG 2 indications may be degraded — monitor engine with available parameters.",
+      "notes": "EIU (Engine Interface Unit) converts engine data from FADEC to AFDX network for ECAM display. An EIU fault affects display only, not engine control (FADEC remains in control).",
+      "warnings": [],
+      "cautions": ["With EIU 2 failed, monitor ENG 2 via any remaining direct displays. Engine remains under FADEC control."],
+      "cbTable": [
+        {"panel": "49VU", "designation": "ENG/EIU2/SPLY", "fin": "21EI2", "location": "S07", "fsn": "ALL"}
+      ]
+    }
+  ]
+}

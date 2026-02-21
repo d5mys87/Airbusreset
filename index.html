@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Airbus Resets — ECAM Quick Reference</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600;700&display=swap');
+
+  :root {
+    --bg: #0a0a12;
+    --bg-card: #12121e;
+    --bg-hover: #1a1a2e;
+    --border: #2a2a42;
+    --border-bright: #3a3a60;
+    --text: #d0d0e8;
+    --text-dim: #6868a0;
+    --amber: #e8a820;
+    --amber-bright: #f0c040;
+    --cyan: #00ccee;
+    --cyan-dim: #008899;
+    --red: #ff3333;
+    --green: #00cc66;
+    --green-dim: #007740;
+    --font-mono: 'Share Tech Mono', 'Courier New', monospace;
+    --font-display: 'Rajdhani', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-mono);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Scanline overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.07) 2px,
+      rgba(0,0,0,0.07) 4px
+    );
+    pointer-events: none;
+    z-index: 1000;
+  }
+
+  /* Grid bg */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,204,238,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,204,238,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  #app {
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 20px 60px;
+  }
+
+  /* ── HEADER ── */
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 0 18px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 28px;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  #logo {
+    height: 44px;
+    width: auto;
+    opacity: 0.9;
+    filter: brightness(1.1);
+  }
+
+  .logo-fallback {
+    height: 44px;
+    width: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--cyan);
+    color: var(--cyan);
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+
+  .header-title {
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+  }
+
+  .header-title h1 {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    color: var(--cyan);
+    text-transform: uppercase;
+  }
+
+  .header-title .sub {
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 2px;
+    margin-top: 3px;
+    text-transform: uppercase;
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  /* Aircraft toggle */
+  .ac-toggle {
+    display: flex;
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+
+  .ac-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 2px;
+    padding: 8px 18px;
+    color: var(--text-dim);
+    transition: all 0.15s;
+    position: relative;
+  }
+
+  .ac-btn:first-child { border-right: 1px solid var(--border); }
+
+  .ac-btn.active-ceo {
+    background: rgba(0,204,238,0.12);
+    color: var(--cyan);
+    text-shadow: 0 0 10px var(--cyan);
+  }
+
+  .ac-btn.active-neo {
+    background: rgba(232,168,32,0.12);
+    color: var(--amber);
+    text-shadow: 0 0 10px var(--amber);
+  }
+
+  .admin-link {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    text-decoration: none;
+    letter-spacing: 1px;
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    transition: all 0.15s;
+  }
+
+  .admin-link:hover {
+    color: var(--text);
+    border-color: var(--border-bright);
+  }
+
+  /* ── STATUS BAR ── */
+  .status-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+  }
+
+  .status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 6px var(--green);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  /* ── SEARCH ── */
+  .search-wrapper {
+    position: relative;
+    margin-bottom: 28px;
+  }
+
+  .search-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-dim);
+    font-size: 16px;
+    pointer-events: none;
+    transition: color 0.2s;
+  }
+
+  #searchInput {
+    width: 100%;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-size: 15px;
+    letter-spacing: 1px;
+    padding: 16px 16px 16px 46px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  #searchInput::placeholder { color: var(--text-dim); }
+
+  #searchInput:focus {
+    border-color: var(--cyan-dim);
+    box-shadow: 0 0 0 1px var(--cyan-dim), inset 0 0 20px rgba(0,204,238,0.04);
+  }
+
+  #searchInput:focus ~ .search-icon { color: var(--cyan); }
+
+  /* Dropdown */
+  #dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--bg-card);
+    border: 1px solid var(--border-bright);
+    border-top: none;
+    z-index: 100;
+    max-height: 380px;
+    overflow-y: auto;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+  }
+
+  #dropdown.open { display: block; }
+
+  .drop-item {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 16px;
+    cursor: pointer;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.1s;
+  }
+
+  .drop-item:last-child { border-bottom: none; }
+  .drop-item:hover, .drop-item.focused { background: var(--bg-hover); }
+
+  .drop-msgs {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .drop-msg {
+    font-size: 13px;
+    color: var(--text);
+    letter-spacing: 0.5px;
+  }
+
+  .drop-msg .highlight {
+    color: var(--amber-bright);
+    font-weight: bold;
+  }
+
+  .drop-meta {
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .drop-ata {
+    font-size: 11px;
+    color: var(--cyan);
+    letter-spacing: 1px;
+    display: block;
+  }
+
+  .drop-ac {
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 1px;
+    display: block;
+    margin-top: 2px;
+  }
+
+  .drop-empty {
+    padding: 20px 16px;
+    color: var(--text-dim);
+    font-size: 13px;
+    letter-spacing: 1px;
+    text-align: center;
+  }
+
+  /* ── DETAIL CARD ── */
+  #detail {
+    display: none;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    animation: fadeIn 0.2s ease;
+  }
+
+  #detail.visible { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .detail-header {
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .detail-ecam-msgs {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 10px;
+  }
+
+  .detail-ecam-msg {
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--amber-bright);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-shadow: 0 0 20px rgba(240,192,64,0.3);
+    line-height: 1.1;
+  }
+
+  .detail-badges {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .badge {
+    font-size: 11px;
+    letter-spacing: 2px;
+    padding: 3px 10px;
+    border: 1px solid;
+  }
+
+  .badge-ata { border-color: var(--cyan-dim); color: var(--cyan); }
+  .badge-computer { border-color: var(--border-bright); color: var(--text); }
+  .badge-ceo { border-color: var(--cyan-dim); color: var(--cyan); }
+  .badge-neo { border-color: var(--amber); color: var(--amber); }
+  .badge-both { border-color: var(--green-dim); color: var(--green); }
+
+  .detail-body {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  /* Warning/caution blocks */
+  .warn-block {
+    border-left: 3px solid var(--red);
+    padding: 12px 16px;
+    background: rgba(255,51,51,0.05);
+  }
+
+  .warn-block .block-label {
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--red);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+  }
+
+  .warn-block .block-text {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  .caution-block {
+    border-left: 3px solid var(--amber);
+    padding: 12px 16px;
+    background: rgba(232,168,32,0.05);
+  }
+
+  .caution-block .block-label {
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--amber);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+  }
+
+  .caution-block .block-text {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  /* Section */
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* Procedure steps */
+  .procedure-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .proc-step {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+
+  .step-num {
+    color: var(--cyan);
+    font-size: 12px;
+    letter-spacing: 1px;
+    flex-shrink: 0;
+    width: 24px;
+    padding-top: 1px;
+  }
+
+  .step-text {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text);
+  }
+
+  /* Notes */
+  .notes-text {
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--text-dim);
+  }
+
+  /* CB Table */
+  .cb-table-wrap {
+    overflow-x: auto;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+
+  thead tr {
+    border-bottom: 1px solid var(--border-bright);
+  }
+
+  th {
+    text-align: left;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--text-dim);
+    padding: 8px 12px 8px 0;
+    text-transform: uppercase;
+    font-weight: normal;
+  }
+
+  td {
+    padding: 9px 12px 9px 0;
+    border-bottom: 1px solid rgba(42,42,66,0.5);
+    color: var(--text);
+    vertical-align: middle;
+  }
+
+  tr:last-child td { border-bottom: none; }
+
+  td.mono { font-family: var(--font-mono); }
+
+  .fin-cell {
+    color: var(--amber);
+    font-family: var(--font-mono);
+    font-size: 13px;
+  }
+
+  .fsn-cell {
+    font-size: 11px;
+    color: var(--text-dim);
+  }
+
+  /* Empty state */
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 60px 20px;
+    gap: 12px;
+    color: var(--text-dim);
+    text-align: center;
+  }
+
+  .empty-icon {
+    font-size: 40px;
+    opacity: 0.3;
+    margin-bottom: 8px;
+  }
+
+  .empty-title {
+    font-family: var(--font-display);
+    font-size: 16px;
+    letter-spacing: 2px;
+    color: var(--text-dim);
+  }
+
+  .empty-hint {
+    font-size: 12px;
+    color: var(--text-dim);
+    opacity: 0.6;
+    letter-spacing: 1px;
+    max-width: 400px;
+  }
+
+  /* Prompt */
+  .search-prompt {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-dim);
+    font-size: 13px;
+    letter-spacing: 1px;
+    line-height: 1.8;
+  }
+
+  .prompt-ata-list {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+  }
+
+  .prompt-ata {
+    font-size: 11px;
+    color: var(--cyan-dim);
+    letter-spacing: 1px;
+    padding: 4px 10px;
+    border: 1px solid rgba(0,204,238,0.15);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .prompt-ata:hover {
+    border-color: var(--cyan-dim);
+    color: var(--cyan);
+    background: rgba(0,204,238,0.05);
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border-bright); }
+  ::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    .detail-ecam-msg { font-size: 18px; }
+    .header-title h1 { font-size: 17px; }
+  }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <header>
+    <div class="header-left">
+      <img id="logo" src="logo.png" alt="Airbus" onerror="this.style.display='none'; document.getElementById('logoFallback').style.display='flex'">
+      <div id="logoFallback" class="logo-fallback" style="display:none">A</div>
+      <div class="header-title">
+        <h1>Airbus Resets</h1>
+        <span class="sub">TSM A318/A319/A320/A321 · ATA 24-00-00-810-818-A</span>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="ac-toggle">
+        <button class="ac-btn" id="btnCEO" onclick="setAircraft('CEO')">CEO</button>
+        <button class="ac-btn" id="btnNEO" onclick="setAircraft('NEO')">NEO</button>
+      </div>
+      <a href="admin.html" class="admin-link">ADMIN</a>
+    </div>
+  </header>
+
+  <div class="status-bar">
+    <span class="status-dot"></span>
+    <span id="statusText">LOADING DATABASE...</span>
+  </div>
+
+  <div class="search-wrapper">
+    <span class="search-icon">⌕</span>
+    <input
+      type="text"
+      id="searchInput"
+      placeholder="Search ECAM message... (e.g. FWC, PACK, LGCIU)"
+      autocomplete="off"
+      autocorrect="off"
+      spellcheck="false"
+    >
+    <div id="dropdown"></div>
+  </div>
+
+  <div id="detail"></div>
+  <div id="prompt" class="search-prompt">
+    <div>TYPE AN ECAM MESSAGE OR SYSTEM NAME TO SEARCH</div>
+    <div style="font-size:11px;margin-top:6px;opacity:0.5">ECAM · ATA · COMPUTER · SYSTEM</div>
+    <div class="prompt-ata-list" id="ataList"></div>
+  </div>
+
+</div>
+
+<script>
+// ── STATE ──
+let db = { messages: [] };
+let currentAircraft = localStorage.getItem('aircraft') || 'CEO';
+let currentQuery = '';
+let focusedIndex = -1;
+let selectedId = null;
+let debounceTimer = null;
+
+// ── INIT ──
+async function init() {
+  setAircraftUI(currentAircraft, false);
+
+  try {
+    // Check for localStorage override
+    const override = localStorage.getItem('db_override');
+    if (override) {
+      db = JSON.parse(override);
+    } else {
+      const res = await fetch('database.json');
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      db = await res.json();
+    }
+    const count = db.messages.length;
+    document.getElementById('statusText').textContent =
+      `DATABASE LOADED · ${count} PROCEDURES · TSM REV 2026`;
+    buildAtaList();
+  } catch (e) {
+    document.getElementById('statusText').textContent = 'DATABASE ERROR: ' + e.message;
+    db = { messages: [] };
+  }
+}
+
+function buildAtaList() {
+  const atas = [...new Set(db.messages.map(m => 'ATA ' + m.ata))].sort();
+  const container = document.getElementById('ataList');
+  container.innerHTML = atas.map(a =>
+    `<span class="prompt-ata" onclick="quickSearch('${a}')">${a}</span>`
+  ).join('');
+}
+
+function quickSearch(q) {
+  document.getElementById('searchInput').value = q;
+  currentQuery = q;
+  doSearch(q);
+}
+
+// ── AIRCRAFT TOGGLE ──
+function setAircraft(type) {
+  currentAircraft = type;
+  localStorage.setItem('aircraft', type);
+  setAircraftUI(type, true);
+}
+
+function setAircraftUI(type, reFilter) {
+  document.getElementById('btnCEO').className = 'ac-btn' + (type === 'CEO' ? ' active-ceo' : '');
+  document.getElementById('btnNEO').className = 'ac-btn' + (type === 'NEO' ? ' active-neo' : '');
+  if (reFilter && currentQuery) doSearch(currentQuery);
+  if (reFilter && selectedId) showDetail(selectedId);
+}
+
+// ── SEARCH ──
+function filterMessages(query) {
+  const q = query.toLowerCase();
+  return db.messages.filter(msg => {
+    // Aircraft filter
+    if (!msg.aircraft.includes(currentAircraft)) return false;
+    // Text match
+    return (
+      msg.ecamMessages.some(m => m.toLowerCase().includes(q)) ||
+      msg.computer.toLowerCase().includes(q) ||
+      msg.ata.includes(q) ||
+      (msg.notes && msg.notes.toLowerCase().includes(q))
+    );
+  });
+}
+
+function doSearch(query) {
+  currentQuery = query;
+  focusedIndex = -1;
+  if (!query || query.length < 1) {
+    closeDropdown();
+    return;
+  }
+  const results = filterMessages(query);
+  renderDropdown(results, query);
+}
+
+function renderDropdown(results, query) {
+  const dd = document.getElementById('dropdown');
+  if (results.length === 0) {
+    dd.innerHTML = `<div class="drop-empty">NO MATCH FOR "${query.toUpperCase()}" · ${currentAircraft}</div>`;
+    dd.classList.add('open');
+    return;
+  }
+  dd.innerHTML = results.map((msg, i) => {
+    const msgsHtml = msg.ecamMessages.map(m => `<span class="drop-msg">${highlightMatch(m, query)}</span>`).join('');
+    const acLabel = msg.aircraft.length === 2 ? 'CEO + NEO' : msg.aircraft[0];
+    return `<div class="drop-item" data-id="${msg.id}" tabindex="-1">
+      <div class="drop-msgs">${msgsHtml}</div>
+      <div class="drop-meta">
+        <span class="drop-ata">ATA ${msg.ata}</span>
+        <span class="drop-ac">${acLabel}</span>
+      </div>
+    </div>`;
+  }).join('');
+  dd.classList.add('open');
+
+  dd.querySelectorAll('.drop-item').forEach(el => {
+    el.addEventListener('click', () => {
+      const id = el.dataset.id;
+      showDetail(id);
+      closeDropdown();
+      document.getElementById('searchInput').value =
+        db.messages.find(m => m.id === id)?.ecamMessages[0] || '';
+    });
+  });
+}
+
+function highlightMatch(text, query) {
+  const q = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return text.replace(new RegExp(`(${q})`, 'gi'), '<span class="highlight">$1</span>');
+}
+
+function closeDropdown() {
+  document.getElementById('dropdown').classList.remove('open');
+  document.getElementById('dropdown').innerHTML = '';
+  focusedIndex = -1;
+}
+
+// ── KEYBOARD NAV ──
+document.getElementById('searchInput').addEventListener('keydown', e => {
+  const dd = document.getElementById('dropdown');
+  const items = dd.querySelectorAll('.drop-item');
+  if (e.key === 'Escape') { closeDropdown(); return; }
+  if (!dd.classList.contains('open') || items.length === 0) return;
+
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    focusedIndex = Math.min(focusedIndex + 1, items.length - 1);
+    updateFocus(items);
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    focusedIndex = Math.max(focusedIndex - 1, 0);
+    updateFocus(items);
+  } else if (e.key === 'Enter') {
+    e.preventDefault();
+    const focused = focusedIndex >= 0 ? items[focusedIndex] : items[0];
+    if (focused) {
+      const id = focused.dataset.id;
+      showDetail(id);
+      closeDropdown();
+      document.getElementById('searchInput').value =
+        db.messages.find(m => m.id === id)?.ecamMessages[0] || '';
+    }
+  }
+});
+
+function updateFocus(items) {
+  items.forEach((el, i) => {
+    el.classList.toggle('focused', i === focusedIndex);
+    if (i === focusedIndex) el.scrollIntoView({ block: 'nearest' });
+  });
+}
+
+document.getElementById('searchInput').addEventListener('input', e => {
+  clearTimeout(debounceTimer);
+  debounceTimer = setTimeout(() => doSearch(e.target.value.trim()), 150);
+});
+
+document.addEventListener('click', e => {
+  if (!e.target.closest('.search-wrapper')) closeDropdown();
+});
+
+// ── DETAIL RENDER ──
+function showDetail(id) {
+  const msg = db.messages.find(m => m.id === id);
+  if (!msg) return;
+  selectedId = id;
+
+  document.getElementById('prompt').style.display = 'none';
+  const el = document.getElementById('detail');
+  el.classList.add('visible');
+  el.innerHTML = buildDetailHTML(msg);
+}
+
+function buildDetailHTML(msg) {
+  const acLabel = msg.aircraft.length === 2 ? 'CEO + NEO' : msg.aircraft[0];
+  const acBadgeClass = msg.aircraft.length === 2 ? 'badge-both' : (msg.aircraft[0] === 'CEO' ? 'badge-ceo' : 'badge-neo');
+
+  // ECAM messages
+  const ecamHtml = msg.ecamMessages.map(m =>
+    `<div class="detail-ecam-msg">${m}</div>`
+  ).join('');
+
+  // Warnings
+  const warningsHtml = msg.warnings.map(w => `
+    <div class="warn-block">
+      <div class="block-label">⚠ WARNING</div>
+      <div class="block-text">${w}</div>
+    </div>`).join('');
+
+  // Cautions
+  const cautionsHtml = msg.cautions.map(c => `
+    <div class="caution-block">
+      <div class="block-label">△ CAUTION</div>
+      <div class="block-text">${c}</div>
+    </div>`).join('');
+
+  // Procedure
+  const steps = msg.resetProcedure.split('\n').filter(s => s.trim());
+  const stepsHtml = steps.map(s => {
+    const match = s.match(/^(\d+)\.\s+(.+)/);
+    if (match) {
+      return `<div class="proc-step">
+        <span class="step-num">${match[1]}.</span>
+        <span class="step-text">${match[2]}</span>
+      </div>`;
+    }
+    return `<div class="proc-step"><span class="step-text">${s}</span></div>`;
+  }).join('');
+
+  // CB Table
+  let cbHtml = '';
+  if (msg.cbTable && msg.cbTable.length > 0) {
+    const rows = msg.cbTable.map(cb => `
+      <tr>
+        <td class="mono">${cb.panel}</td>
+        <td>${cb.designation}</td>
+        <td class="fin-cell">${cb.fin}</td>
+        <td class="mono">${cb.location}</td>
+        <td class="fsn-cell">${cb.fsn}</td>
+      </tr>`).join('');
+    cbHtml = `
+      <div>
+        <div class="section-label">CIRCUIT BREAKERS</div>
+        <div class="cb-table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>PANEL</th>
+                <th>DESIGNATION</th>
+                <th>FIN</th>
+                <th>LOC</th>
+                <th>FSN</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>
+      </div>`;
+  }
+
+  // Notes
+  const notesHtml = msg.notes ? `
+    <div>
+      <div class="section-label">NOTE</div>
+      <div class="notes-text">${msg.notes}</div>
+    </div>` : '';
+
+  return `
+    <div class="detail-header">
+      <div class="detail-ecam-msgs">${ecamHtml}</div>
+      <div class="detail-badges">
+        <span class="badge badge-ata">ATA ${msg.ata}</span>
+        <span class="badge badge-computer">${msg.computer}</span>
+        <span class="badge ${acBadgeClass}">${acLabel}</span>
+      </div>
+    </div>
+    <div class="detail-body">
+      ${warningsHtml}
+      ${cautionsHtml}
+      <div>
+        <div class="section-label">RESET PROCEDURE</div>
+        <div class="procedure-steps">${stepsHtml}</div>
+      </div>
+      ${cbHtml}
+      ${notesHtml}
+    </div>`;
+}
+
+// ── START ──
+init();
+</script>
+</body>
+</html>
