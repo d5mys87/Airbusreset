@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "lastUpdated": "2026-02-21",
+  "lastUpdated": "2026-02-22",
   "messages": [
     {
       "id": "air-pack-regul-fault-neo",
@@ -1161,6 +1161,31 @@
           "fin": "87RN",
           "location": "M04",
           "fsn": "101-150"
+        }
+      ]
+    },
+    {
+      "id": "isis-reset-1771759889930",
+      "aircraft": [
+        "CEO",
+        "NEO"
+      ],
+      "ecamMessages": [
+        "ISIS RESET"
+      ],
+      "ata": "34",
+      "computer": "NAV",
+      "resetProcedure": "1. OPEN CIRCUIT BREAKER FOR MORE THAN 5 SECONDS THEN CLOSE",
+      "notes": "AFTER SOME SECONDS, ON THE ISIS INDICATOR, THE INIT PAGE COMES INTO VIEW",
+      "warnings": [],
+      "cautions": [],
+      "cbTable": [
+        {
+          "panel": "49VU",
+          "designation": "NAV/STBY/INST",
+          "fin": "5FN",
+          "location": "F12",
+          "fsn": "ALL"
         }
       ]
     }
