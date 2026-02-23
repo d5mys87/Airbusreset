@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "lastUpdated": "2026-02-22",
+  "lastUpdated": "2026-02-23",
   "messages": [
     {
       "id": "air-pack-regul-fault-neo",
@@ -1185,6 +1185,38 @@
           "designation": "NAV/STBY/INST",
           "fin": "5FN",
           "location": "F12",
+          "fsn": "ALL"
+        }
+      ]
+    },
+    {
+      "id": "air-bleed-status-msg-1771890388300",
+      "aircraft": [
+        "CEO",
+        "NEO"
+      ],
+      "ecamMessages": [
+        "AIR BLEED STATUS MSG"
+      ],
+      "ata": "36",
+      "computer": "FWC",
+      "resetProcedure": "1. RESET FWC 1 + 2 COMPUTER USING CIRCUIT BREAKERS",
+      "notes": "AIR BLEED STATUS MSG CAN SOMETIMES LATCH AFTER AC GEN TEST",
+      "warnings": [],
+      "cautions": [],
+      "cbTable": [
+        {
+          "panel": "49VY",
+          "designation": "FWS/FWC1/SPLY",
+          "fin": "3WW",
+          "location": "F01",
+          "fsn": "ALL"
+        },
+        {
+          "panel": "121VU",
+          "designation": "EIS/FWC2/SPLY",
+          "fin": "2WW",
+          "location": "Q07",
           "fsn": "ALL"
         }
       ]
